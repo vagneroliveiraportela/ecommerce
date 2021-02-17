@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'a4c766da566dabbb923c527a5b8bf7b54bb7b46a',
     'name' => 'vagneroliveiraportela/ecommerce',
   ),
   'versions' => 
@@ -64,12 +64,12 @@ private static $installed = array (
     ),
     'vagneroliveiraportela/ecommerce' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'a4c766da566dabbb923c527a5b8bf7b54bb7b46a',
     ),
   ),
 );
