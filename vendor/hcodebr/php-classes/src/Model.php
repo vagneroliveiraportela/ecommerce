@@ -2,17 +2,17 @@
 namespace Hcode;
 class Model{
 	private $values = [];
-	public function __call($name, $args){
+	public function __call($name, $args=array()){
 
 		$method = substr($name, 0, 3);// get em 3 caracteres position 0 ate 2
 		$fieldName = substr($name, 3, strlen($name));// get no restante dos caracteres iniciando position 3
 		
 		switch ($method) {
-			case 'get':
-				return $this->values[$fieldName];
+			case "get":
+				return (isset($this->values[$fieldname])) ? $this->values[$fieldname] : NULL;
 				break;
 
-			case 'set':
+			case "set":
 				$this->values[$fieldName]=$args[0];
 				break;
 			
