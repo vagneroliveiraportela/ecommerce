@@ -17,11 +17,11 @@ class Page{
 		$config = array(
 			"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"].$tpl_dir,
 			"cache_dir"     => $_SERVER["DOCUMENT_ROOT"]."/views-cache/",
-			"debug" => true // set to false to improve the speed
+					"debug" => true // set to false to improve the speed
 				);
 
 		Tpl::configure( $config );
-		$this->tpl = new Tpl;
+		$this->tpl = new Tpl();
 		$this->setData($this->options["data"]);
 		if ($this->options["header"] === true) $this->tpl->draw("header");
 	}

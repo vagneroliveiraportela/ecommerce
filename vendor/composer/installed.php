@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'a4c766da566dabbb923c527a5b8bf7b54bb7b46a',
+    'reference' => '0248a44c8e83d5d3bd235b36e99347af05e90a07',
     'name' => 'vagneroliveiraportela/ecommerce',
   ),
   'versions' => 
@@ -45,7 +45,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'a4c766da566dabbb923c527a5b8bf7b54bb7b46a',
+      'reference' => '0248a44c8e83d5d3bd235b36e99347af05e90a07',
     ),
   ),
 );
