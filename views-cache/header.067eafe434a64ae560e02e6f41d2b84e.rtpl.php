@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!DOCTYPE html>
 <!--
     Hcode Store by hcode.com.br
 -->
@@ -43,7 +43,7 @@
                             <li><a href="#"><i class="fa fa-user"></i> Minha Conta</a></li>
                             <li><a href="#"><i class="fa fa-heart"></i> Lista de Desejos</a></li>
                             <li><a href="#"><i class="fa fa-shopping-cart"></i> Meu Carrinho</a></li>
-                            <li><a href="/admin/login"><i class="fa fa-lock"></i> Login</a></li>
+                            <li><a href="#"><i class="fa fa-lock"></i> Login</a></li>
                         </ul>
                     </div>
                 </div>
