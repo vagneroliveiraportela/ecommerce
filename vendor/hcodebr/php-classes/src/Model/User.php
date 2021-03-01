@@ -2,27 +2,35 @@
 namespace Hcode\Model;
 use \Hcode\DB\Sql;
 use \Hcode\Model;
+use \Hcode\Mailer;
 
 class User extends Model{
+	const SECRET = "HcodePhp7_Secret";
+	const SECRET_IV = "HcodePhp7_Secret_IV";
+	const ERROR = "UserError";
+	const ERROR_REGISTER = "UserErrorRegister";
+	const SUCCESS = "UserSucesss";
 	const SESSION = "User";
+	
 	public static function login($login, $password){
 		$sql = new Sql();
 
 		$results = $sql->select("SELECT * FROM db_ecommerce.tb_users WHERE deslogin = :LOGIN", array(
-			":LOGIN" => $login
-		));
+			":LOGIN" => $login));
+		
 		if(count($results) === 0){
-			throw new \Exception("usuario inexistente ou senha invalida");			
+			throw new \Exception("usuario inexistente");			
 			
 		}
 		$data = $results[0];
+
 		if(password_verify($password, $data["despassword"]) === true){
 			$user = new User();
 			$user->setData($data);
 			$_SESSION[User::SESSION] = $user->getData();
 			return $user;
 		}else{
-			throw new \Exception("usuario inexistente ou senha invalida");
+			throw new \Exception("senha invalida");
 			
 		}
 	}
@@ -86,6 +94,40 @@ class User extends Model{
 		$sql->query("CALL sp_users_delete(:iduser)", array(
 			":iduser" => $this->getiduser()
 		));
-}
+	}
+	public static function getForgot($email){
+		$sql = new Sql();
+		$results=$sql->select("SELECT *
+			FROM db_ecommerce.tb_persons a 
+			INNER JOIN db_ecommerce.tb_users b USING(idperson) 
+			WHERE desemail = :email;", array(
+				":email"=>$email
+			));
+		if(count($results)===0){
+			throw new \Exception("Email não cadastrado");
+		}else{
+			$data = $results[0];
+			$results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser, :desip)", array(
+				":iduser"=>$data["iduser"],
+				":desip"=>$_SERVER["REMOTE_ADDR"]
+			));
+			if(count($results2)===0){
+				throw new \Exception("Não foi possivel recuperar a senha");
+
+			}else{
+				$dataRecovery = $results2[0];				
+				$code = openssl_encrypt($dataRecovery['idrecovery'], 'AES-128-CBC', pack("a16", User::SECRET), 0, pack("a16", User::SECRET_IV));
+				$code = base64_encode($code);
+				$link="hcodecommerce.com.br/admin/forgot/reset?code=$code";
+				$mailer = new Mailer($data["desemail"], $data["desperson"], "Redefenir Senha! Hcode","forgot", array(
+					"name"=>$data["desperson"],
+					"link"=>$link
+				));
+				$mailer->send();
+				return $data;
+			}
+		}
+		
+	}
 }
 ?>
