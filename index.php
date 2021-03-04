@@ -59,6 +59,7 @@ $app->get('/admin/users/create', function(){
 });
 //.................> DELETE
 $app->get('/admin/users/:iduser/delete', function($iduser){
+	var_dump($iduser);
 	User::verifyLogin();
 	$user = new User();
 	$user->get((int)$iduser);
@@ -137,7 +138,22 @@ $app->get("/admin/forgot/reset", function(){
 		"code"=>$_GET["code"]
 	));
 });
+$app->post("/admin/forgot/reset", function(){
+	$forgot = User::validForgotDecrypt($_POST["code"]);
+	User::setForgotused($forgot["idrecovery"]);
+	$user = new User();
+	$user->get((int)$forgot["iduser"]);
+	$password = password_hash($_POST["password"], PASSWORD_DEFAULT, [
+		"cost"=>12
+	]);
+	$user->setPassword($_POST["password"]);
+	$page = new PageAdmin([
+		"header"=>false,
+		"footer"=>false
+	]);
+	$page->setTpl("forgot-reset-success");
 
+});
 
 $app->run();
 

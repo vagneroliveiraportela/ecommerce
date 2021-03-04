@@ -14,10 +14,10 @@ class User extends Model{
 	
 	public static function login($login, $password){
 		$sql = new Sql();
-
-		$results = $sql->select("SELECT * FROM db_ecommerce.tb_users WHERE deslogin = :LOGIN", array(
-			":LOGIN" => $login));
 		
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin =:LOGIN", array(
+			":LOGIN"=>$login
+		));
 		if(count($results) === 0){
 			throw new \Exception("usuario inexistente");			
 			
@@ -51,14 +51,14 @@ class User extends Model{
 	}
 	public static function listAll(){
 		$sql = new Sql();
-		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
+		return $sql->select("SELECT * FROM db_ecommerce.tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 	}
 	public function save(){
 		$sql = new Sql();
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 			":desperson"=> $this-> getdesperson(),
 			":deslogin"=> $this-> getdeslogin(),
-			":despassword"=> $this-> getdespassword(),
+			":despassword"=> User::getPasswordHash($this->getdespassword()),
 			":desemail"=> $this-> getdesemail(),
 			":nrphone"=> $this-> getnrphone(),
 			":inadmin"=> $this-> getinadmin()
@@ -138,13 +138,13 @@ class User extends Model{
 			INNER JOIN tb_users b USING(iduser)
 			INNER JOIN tb_persons c USING(idperson)
 			WHERE
-				a.idrecovery = :idrecovery
-				AND
-				a.dtrecovery IS NULL
-				AND
-				DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW()", array(
-			":idrecovery"=>$idrecovery
-		));
+			a.idrecovery = :idrecovery
+			AND
+			a.dtrecovery IS NULL
+			AND
+			DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW()", array(
+				":idrecovery"=>$idrecovery
+			));
 		var_dump($results);
 		if(count($results)===0){
 			throw new \Exception("Impossível recuperar senha");
@@ -152,6 +152,27 @@ class User extends Model{
 		}else{
 			return $results[0];
 		}
+	}
+	public static function setForgotused($idrecovery){
+		$sql = new Sql();
+		$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery=:idrecovery", array(
+			":idrecovery"=>$idrecovery
+		));
+	}
+	public function setPassword($password){
+		var_dump($password);
+		$sql = new Sql();
+		$sql->query("UPDATE tb_users SET despassword = :password WHERE iduser =:iduser",array(
+			":password"=>$password,
+			":iduser"=>$this->getiduser()
+		));
+
+	}
+	public static function getPasswordHash($password)
+	{
+		return password_hash($password, PASSWORD_DEFAULT, [
+			'cost'=>12
+		]);
 	}
 }
 ?>
