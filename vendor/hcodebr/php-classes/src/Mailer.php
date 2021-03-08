@@ -3,7 +3,7 @@ namespace Hcode;
 use Rain\Tpl;
 class Mailer{
 	const USERNAME ='jucka39@gmail.com';
-	const PASSWORD = 'francilene40';
+	const PASSWORD = 'pass';
 	const NAME_FROM = "Vagner Portela";
 
 	private $mail;
